@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}
+   Post Creation
+{% endblock %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h2 class="text-center text-white mb-4">
+      {% if form.instance.pk %}
+        Update Post
+      {% else %}
+        Create New Post
+      {% endif %}
+    </h2>
+
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      
+      <div class="card bg-dark text-white p-4 rounded shadow-lg">
+        {{ form.as_p }}  <!-- Render form fields as paragraphs -->
+
+        <div class="d-flex justify-content-between mt-4">
+          <button type="submit" class="btn btn-primary">
+            {% if form.instance.pk %}
+              Update Post
+            {% else %}
+              Create Post
+            {% endif %}
+          </button>
+
+          <a href="{% url 'home' %}" class="btn btn-secondary">Back</a>
+        </div>
+      </div>
+    </form>
+  </div>
+{% endblock %}

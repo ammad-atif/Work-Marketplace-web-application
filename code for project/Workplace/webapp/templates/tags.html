@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}
+   Tags
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h2 class="text-center text-white mb-4">Tags</h2>
+        
+        <!-- Display existing tags -->
+        <div class="row">
+            {% for tag in tags %}
+                <div class="col-md-4 mb-4">
+                    <div class="card bg-dark text-white h-100 shadow-lg">
+                        <div class="card-body">
+                            <p class="card-text">Tag: {{ tag.string }}</p>
+                            <a href="{% url 'delete_tag' tag.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Create new tag -->
+        <h2 class="text-center text-white mb-4">Create a New Tag</h2>
+        <form method="POST" action="{% url 'create_tag' %}" class="bg-dark p-4 rounded shadow-lg">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary w-100">
+                Create
+            </button>
+        </form>
+    </div>
+{% endblock %}

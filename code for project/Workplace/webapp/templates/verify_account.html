@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}
+   Verify Account
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="text-center mb-4 text-white">Requests to Approve</h1>
+    
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card bg-dark text-white p-4 rounded shadow-lg">
+                <h5 class="text-center mb-4">Verify User Account</h5>
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        {{ form.as_p }}
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn-outline-success w-100">Verify</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

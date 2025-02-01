@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}
+   Users
+{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-end mb-4">
+        <form action="{% url 'search_user' %}" method="get" class="d-flex w-50">
+            <input type="text" name="username" placeholder="Search by username" class="form-control me-2">
+            <input type="submit"  class="btn btn-primary">
+        </form>
+    </div>
+
+   <div class="container mt-5">
+    {% if users %}
+      <h2 class="text-center text-white mb-4">Latest Posts</h2>
+      <div class="row justify-content-center">
+         {% for userr in users %}
+         <div class="col-md-4 mb-4">
+            <div class="card h-100 bg-dark text-white shadow-lg rounded" style="border: none;">
+               <div class="card-body">
+                  <h5 class="card-title text-primary">{{userr.username }}</h5>
+                  <h5 class="card-title text-primary">{{userr.typee }}</h5>
+                  <a href="{% url 'profile' user_pk=userr.pk %}">Visit Profile</a>
+               </div>
+            </div>
+         </div>
+         {% endfor %}
+      </div>
+   </div>
+   {% endif %}
+   <style>
+      .card {
+         background-color: #2c2c2c;
+         border-radius: 10px;
+      }
+
+      .card-title {
+         color: #007bff; /* Primary blue */
+      }
+
+      .card-text {
+         color: white;
+      }
+
+      .card-body {
+         padding: 1.5rem;
+      }
+
+      .card-text span {
+         color: #17a2b8; /* Info color for the username */
+      }
+   </style>
+{% endblock %}

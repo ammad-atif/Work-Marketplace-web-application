@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}
+   Withdraw History
+{% endblock %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h1 class="text-center text-white mb-4">Withdraw History</h1>
+    
+    <div class="table-responsive">
+      <table class="table table-dark table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Amount</th>
+            <th scope="col">Date</th>
+            <th scope="col">Contract</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for payment in payments %}
+            <tr>
+              <td>${{ payment.amount }}</td>
+              <td>{{ payment.created_at }}</td>
+              <td>{{ payment.contract }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

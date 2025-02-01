@@ -1,0 +1,40 @@
+
+Default Fields in Django's User Model:
+--------------------------------------
+
+1. username: 
+   - A required field that uniquely identifies the user.
+   - It must be unique across all users. (max_length=150)
+
+2. password: 
+   - A hashed password field used to store the user's password securely.
+
+3. email: 
+   - A field for storing the user's email address.
+   - It is not required by default.
+
+4. first_name: 
+   - The user's first name (optional, can be left blank). (max_length=30)
+
+5. last_name: 
+   - The user's last name (optional, can be left blank). (max_length=150)
+
+6. is_staff: 
+   - A BooleanField indicating whether the user can log into the Django admin site.
+   - Default is False.
+
+7. is_active: 
+   - A BooleanField indicating whether the user is active.
+   - Default is True. If False, the user is disabled and cannot log in.
+
+8. is_superuser: 
+   - A BooleanField indicating whether the user has all permissions and access to everything.
+   - Default is False. This grants full administrative access.
+
+9. last_login: 
+   - A DateTimeField that stores the last time the user logged in. 
+   - By default, it is NULL unless the user logs in.
+
+10. date_joined: 
+    - A DateTimeField indicating when the user account was created.
+    - Automatically set when the user registers.

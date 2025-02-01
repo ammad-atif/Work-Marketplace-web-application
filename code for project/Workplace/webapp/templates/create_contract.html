@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Create Contract
+{% endblock title %}
+
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Contract Details Form</h2>
+    <form method='POST'>
+        <div class="mb-3">
+            <label for="contractDetails" class="form-label">Contract Details</label>
+            <textarea class="form-control" id="contractDetails" rows="4" placeholder="Enter contract details" name="details"></textarea>
+        </div>
+        {% comment %} <div class="mb-3">
+            <label for="endDate" class="form-label">End Date</label>
+            <input type="date" class="form-control" id="endDate" required>
+        </div> {% endcomment %}
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="reset" class="btn btn-secondary">Reset</button>
+        </div>
+    </form>
+</div>
+
+{% endblock content %}

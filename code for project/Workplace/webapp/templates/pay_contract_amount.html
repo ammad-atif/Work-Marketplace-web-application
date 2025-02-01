@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h2 class="text-center text-white mb-4">Payment Form</h2>
+        <form method="POST" class="text-center">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary mb-3">
+                Pay
+            </button>
+        </form>
+        <a href="{% url 'view_active_contracts' %}" class="btn btn-outline-primary">Back</a>
+    </div>
+{% endblock %}

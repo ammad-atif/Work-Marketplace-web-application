@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container mt-5">
+        <!-- Search Form on Top Right -->
+        <div class="d-flex justify-content-center mb-4">
+            <form action="" class="d-flex w-50">
+                <input type="text" name="search" placeholder="Search by title" value="{{ request.GET.title }}" class="form-control me-2">
+                <input type="submit" value="Search" class="btn btn-primary">
+            </form>
+        </div>
+
+        <!-- Display Posts -->
+        <div>
+            {% for post in posts %}
+                <div class="d-flex justify-content-center mb-4">
+                    <div class="card bg-dark text-white" style="width: 90%; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">{{ post.title }}</h5>
+                            <p class="card-text">TEXT: {{ post.text }}</p>
+                            <p class="card-text">CREATED_AT: {{ post.created_at }}</p>
+                            <p class="card-text">LAST_MODIFIED: {{ post.last_modified }}</p>
+                            <p class="card-text">PAY: ${{ post.pay }}</p>
+                            <p class="card-text">TAGS: 
+                                {% for tag in post.tags.all %}
+                                    <span class="badge badge-secondary">{{ tag.string }}</span>
+                                {% endfor %}
+                            </p>
+                        </div>
+                        <div class="card-footer bg-dark text-white d-flex justify-content-between">
+                            <input type="number" id="amount-{{ post.id }}" class="form-control" placeholder="Enter Bid Amount" min="1" >
+                            <button class="btn btn-primary bid" id="{{ post.id }}">Bid</button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- JS Functions -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('.bid').click(function(){
+                var csrftoken = '{{ csrf_token }}';
+                var postId = $(this).attr("id");
+                var textbox = document.getElementById('amount-' + postId);
+                var bidAmount = textbox.value;
+                if (!bidAmount) {
+                    alert("Please enter a bid amount.");
+                    return;
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'addbid' %}",
+                    data: {
+                        csrfmiddlewaretoken: csrftoken,
+                        post_id: postId,
+                        amount: bidAmount
+                    },
+                    success: function(data) {
+                        alert("Bid placed successfully!");
+                        textbox.disabled = true;
+                        document.getElementById(postId).disabled = true;
+                    },
+                    error: function(xhr, status, error) {
+                        alert("An error occurred while placing the bid. Please try again.");
+                    }
+                });
+            });
+        });
+    </script>
+
+{% endblock %}

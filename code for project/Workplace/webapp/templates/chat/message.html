@@ -1,0 +1,60 @@
+<div id="chat_messages" hx-swap-oob="beforeend">
+<style>
+.message {
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0;
+    padding: 10px;
+    max-width: 60%;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.message-right {
+    align-self: flex-end;
+    background-color: #76de54; /* Light green for user's messages */
+    text-align: right;
+}
+
+.message-left {
+    align-self: flex-start;
+    background-color: #cf4545; /* Light gray for others' messages */
+    text-align: left;
+}
+
+.message-content {
+    padding: 8px;
+    border-radius: 5px;
+    word-wrap: break-word;
+    color: white;
+}
+
+.message-timestamp {
+    font-size: 12px;
+    color: #000000;
+    margin-top: 5px;
+}
+
+</style>
+
+{% if message.author == user %}
+    <li class="message message-right">
+        <div class="message-content">
+            <p>{{ message.body }}</p>
+        </div>
+        <div class="message-timestamp">
+            <small>{{ message.timestamp }}</small>
+        </div>
+    </li>
+{% else %}
+    <li class="message message-left" >
+        <div class="message-content">
+            <p>{{ message.body }}</p>
+        </div>
+        <div class="message-timestamp">
+            <small>{{ message.timestamp }}</small>
+        </div>
+    </li>
+{% endif %}
+</div>

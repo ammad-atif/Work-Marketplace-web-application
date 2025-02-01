@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}
+   Withdraw History
+{% endblock %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h1 class="text-center text-white mb-4">Withdraw History</h1>
+
+    <table class="table table-dark table-striped table-bordered">
+      <thead>
+        <tr>
+          <th scope="col">Amount</th>
+          <th scope="col">Date</th>
+          <th scope="col">Status</th>  <!-- Added Status Column -->
+        </tr>
+      </thead>
+      <tbody>
+        {% for winthdraw in winthdraws %}
+          <tr>
+            <td>${{ winthdraw.amount }}</td>
+            <td>{{ winthdraw.created_at }}</td>
+            <td>
+              <!-- Successful Withdrawal Badge -->
+              <span class="badge bg-success">Successful</span>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

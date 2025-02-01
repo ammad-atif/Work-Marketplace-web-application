@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}
+   Admin - Bids
+{% endblock %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h1 class="text-center text-white mb-4">Bids</h1>
+    
+    <div class="table-responsive">
+      <table class="table table-dark table-striped">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Username</th>
+            <th scope="col">Price</th>
+            <th scope="col">Approval</th>
+            <th scope="col">Post</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for bid in bids %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ bid.freelancer.username }}</td>
+              <td>${{ bid.amount }}</td>
+              <td>
+                <a href="{% url 'create_contract' bid.pk %}" class="btn btn-success">Approve</a>
+              </td>
+              <td>
+                <a href="{% url 'post_details' bid.post_id.pk %}" class="btn btn-primary">View details</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

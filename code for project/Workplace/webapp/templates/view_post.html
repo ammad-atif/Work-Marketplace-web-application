@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}
+   Posts
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center text-white mb-4">Latest Posts</h2>
+    <div class="row justify-content-center">
+        {% for post in posts %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-lg" style="background-color: #2c2c2c; border: none; border-radius: 10px;">
+                {% comment %} <img src="{{ post.img.url }}" class="card-img-top" alt="Post Image"> {% endcomment %}
+                <div class="card-body text-white">
+                    <h5 class="card-title text-primary">{{ post.title }}</h5>
+                    <p class="card-text">Created At: {{ post.created_at }}</p>
+                    <a href="{% url 'post_details' post.pk %}" class="btn btn-outline-primary w-100 mt-3">View details</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

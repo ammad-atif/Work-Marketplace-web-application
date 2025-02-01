@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers the content horizontally */
+}
+
+/* Chat Box Container */
+.chat_box {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    height: 100%; /* Ensure the container fills the available space */
+}
+
+/* Chat Header */
+.chat_header {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Chat Messages Section */
+.chat-messages {
+    flex-grow: 1; /* Allow this section to take up all available space */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    overflow-y: auto;
+    list-style-type: none;
+    width: 100%;
+}
+
+/* Chat Form */
+.chat-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+    padding: 10px;
+    background-color: #fff;
+    border-top: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+/* Message Input Styling */
+.message-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 0px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    outline: none;
+}
+
+/* Send Button Styling */
+.send-button {
+    margin-left: 10px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    outline: none;
+    transition: background-color 0.2s;
+}
+
+.send-button:hover {
+    background-color: #0056b3;
+}
+
+/* Scrollbar Styling for Messages */
+.chat-messages::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 4px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+    background-color: #aaa;
+}
+
+.message {
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0;
+    padding: 10px;
+    max-width: 60%;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.message-right {
+    align-self: flex-end;
+    background-color: #76de54; /* Light green for user's messages */
+    text-align: right;
+}
+
+.message-left {
+    align-self: flex-start;
+    background-color: #cf4545; /* Light gray for others' messages */
+    text-align: left;
+}
+
+.message-content {
+    padding: 8px;
+    border-radius: 5px;
+    word-wrap: break-word;
+    color: white;
+}
+
+.message-timestamp {
+    font-size: 12px;
+    color: #000000;
+    margin-top: 5px;
+}
+
+</style>
+
+
+<div class="chat_box">
+    <div class="chat_header">
+        <h1>Chat</h1>
+    </div>
+
+    <ul id="chat_messages" class="chat-messages">
+        {% for message in messages %}
+            {% if message.author == user %}
+            <li class="message message-right">
+                <div class="message-content">
+                    <p>{{ message.body }}</p>
+                </div>
+                <div class="message-timestamp">
+                    <small>{{ message.timestamp }}</small>
+                </div>
+            </li>
+        {% else %}
+            <li class="message message-left" >
+                <div class="message-content">
+                    <p>{{ message.body }}</p>
+                </div>
+                <div class="message-timestamp">
+                    <small>{{ message.timestamp }}</small>
+                </div>
+            </li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+    <form id="chat_message_input" class="chat-form" hx-ext="ws" ws-connect="/ws/chat/{{chat_id}}" ws-send>
+        {% csrf_token %}
+        <input type="text" name="body" placeholder="Type your message here..." class="message-input">
+        <button type="submit" class="send-button">Send</button>
+    </form>
+</div>
+
+<script src="https://unpkg.com/htmx.org@1.8.4"></script>
+<script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/ws.js"></script>
+
+{% endblock %}
+
+

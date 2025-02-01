@@ -1,0 +1,10 @@
+ve\Scripts\activate
+cd Workplace
+python manage.py runserver
+
+py manage.py dbshell
+
+python manage.py makemigrations
+python manage.py migrate
+
+python manage.py makemigrations --empty webapp

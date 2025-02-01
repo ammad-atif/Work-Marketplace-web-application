@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}{% endblock title %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <!-- Profile Card -->
+            <div class="card bg-dark text-white shadow-lg rounded-3">
+                <div class="card-body text-center">
+                    <!-- User Profile Image -->
+                    <img src="{% if user.profile_picture %}{{ user.profile_picture.url }}{% endif %}" 
+                         alt="Profile Picture" class="img-fluid rounded-circle mb-3" style="width: 140px; height: 140px; object-fit: cover;">
+                    <h3 class="card-title">{{ userr.username }}</h3>
+                    <p class="card-text text-muted">{{ userr.typee }}</p>
+                </div>
+
+                <div class="card-body">
+                    <p><strong>Email:</strong> {{ userr.email }}</p>
+                    <p><strong>Roll No:</strong> {{ userr.roll_no }}</p>
+                    <p><strong>University:</strong> {{ userr.university_name }}</p>
+                </div>
+
+                {% comment %} <div class="card-footer text-center">
+                    <a  class="btn btn-primary">Edit Profile + Forgot password</a>
+                </div> {% endcomment %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

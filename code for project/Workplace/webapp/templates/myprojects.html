@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+  /* Modal styles */
+  .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  .modal-content {
+      background-color: #000000;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 500px;
+  }
+
+  .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+  }
+
+  .close:hover,
+  .close:focus {
+      color: rgb(255, 255, 255);
+      text-decoration: none;
+      cursor: pointer;
+  }
+
+  label {
+      display: block;
+      margin-top: 10px;
+  }
+    .provide_feedback {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+    .provide_feedback:hover {
+        background-color: #0056b3;
+    }
+
+    .provide_feedback:disabled {
+        background-color: #cccccc;
+        color: #666666;
+        cursor: default;
+    }
+
+</style>
+
+{% if contracts %}
+<h1>Contracts</h1>
+{% endif %}
+
+{% for contract in contracts %}
+<div class="card" style="width: 18rem;">
+    <div class="post">
+      <h5 class="card-title">Contract for {{contract.post.title}}</h5>
+      <a href="{% url 'create_chat' contract.client.id %}?freelancer_id={{ contract.freelancer.id }}" target="_blank" class="btn btn-primary">Chat</a>
+      <p class="card-text">Description: {{contract.details}}</p>
+      <p class="card-text">Client ID: {{contract.client.username}}</p>
+      <p class="card-text">Deadline: {{contract.deadline}}%</p>
+      <h6>Pay: Rs.{{contract.amount}}</h6>
+      <button class="approve" id="{{contract.id}}">Approve</button>
+    </div>
+  </div>
+  {% endfor %}
+
+{% if projects %}
+<h2>OnGoing Projects</h2>
+{% endif %}
+{% for contract in projects %}
+<div class="card" style="width: 18rem;">
+    <div class="post">
+      <h5 class="card-title">{{contract.post.title}}</h5>
+      <a href="{% url 'create_chat' contract.client.id %}?freelancer_id={{ contract.freelancer.id }}" target="_blank" class="btn btn-primary">Chat</a>
+      <p class="card-text">Description: {{contract.details}}</p>
+      <p class="card-text">Client ID: {{contract.client.username}}</p>
+      <p class="card-text">Deadline: {{contract.deadline}}</p>
+      <button class="update_progress" id="{{contract.id}}"><a href="/project_progress/{{contract.id}}">View/Edit Progress</a></button>
+    </div>
+  </div>
+  {% endfor %}
+
+{% if pending_feedback %}
+<h2>Pending Feedback</h2>
+{% endif %}
+
+<!-- Your existing HTML structure -->
+{% for contract in pending_feedback %}
+<div class="card" style="width: 18rem;">
+    <div class="post">
+        <h5 class="card-title">{{ contract.post.title }}</h5>
+        <p class="card-text">Description: {{ contract.details }}</p>
+        <p class="card-text">Client ID: {{ contract.client.username }}</p>
+        <button class="provide_feedback" id="feedbackButton{{ contract.id }}" onclick="openModal('{{ contract.id }}', '{{ contract.client.username }}', '{{ contract.post.title }}')">Provide Feedback</button>
+    </div>
+</div>
+{% endfor %}
+
+{% if completed_projects %}
+<h2>Completed Projects</h2>
+{% endif %}
+
+<!-- Your existing HTML structure -->
+{% for contract in completed_projects %}
+<div class="card" style="width: 18rem;">
+    <div class="post">
+        <h5 class="card-title">{{ contract.post.title }}</h5>
+        <p class="card-text">Description: {{ contract.details }}</p>
+        <p class="card-text">Client ID: {{ contract.client.username }}</p>
+    </div>
+</div>
+{% endfor %}
+
+<div id="feedbackModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Provide Feedback</h2>
+        <p><strong>Client:</strong> <span id="clientName"></span></p>
+        <p><strong>Project Title:</strong> <span id="projectTitle"></span></p>
+        <form id="feedbackForm" method="post" action="">
+            <input type="hidden" id="contractId" name="contract_id" value="">
+            <label for="rating">Rating:</label>
+            <input type="number" id="rating" name="rating" min="1" max="5" required>
+            <label for="comment">Comment:</label>
+            <textarea id="comment" name="comment" maxlength="500"></textarea>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script>
+    $('#feedbackForm').submit(function(event) {
+        event.preventDefault(); // Prevent the default form submission
+        var csrftoken = '{{ csrf_token }}'; // Ensure you have the CSRF token
+        var formData = {
+            csrfmiddlewaretoken: csrftoken,
+            contract_id: $('#contractId').val(),
+            rating: $('#rating').val(),
+            comment: $('#comment').val()
+        };
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'addfeedback' %}", // Adjust the URL to your endpoint
+            data: formData,
+            success: function(data) {
+              var contractId = $('#contractId').val();
+              $('#feedbackButton' + contractId).prop('disabled', true).text('Feedback Provided'); 
+              closeModal();
+            },
+            error: function(xhr, status, error) {
+                alert('An error occurred while submitting feedback. Please try again.');
+            }
+        });
+    });
+
+    $('.approve').click(function(){
+        var csrftoken = '{{ csrf_token }}';
+        var contractId = $(this).attr("id");
+        $.ajax({
+            type: "POST",
+            url: "{% url 'approve_contract' %}",
+            data: {
+                csrfmiddlewaretoken: csrftoken,
+                contract_id: contractId
+            },
+            success: function(data) {
+                alert("Contract approved successfully! Refresh to see Changes");
+                document.getElementById(contractId).disabled = true;
+            },
+            error: function(xhr, status, error) {
+                alert("An error occurred while approving the contract. Please try again.");
+            }
+        });
+    });
+
+    function openModal(contractId, clientName, projectTitle)
+    {
+    document.getElementById("feedbackModal").style.display = "block";
+    document.getElementById("contractId").value = contractId;
+    document.getElementById("clientName").textContent = clientName; 
+    document.getElementById("projectTitle").textContent = projectTitle;
+    }
+    function closeModal()
+    {
+      document.getElementById("feedbackModal").style.display = "none";
+    }
+    window.onclick = function(event)
+    { 
+      const modal = document.getElementById("feedbackModal");
+      if (event.target == modal)
+      { 
+        modal.style.display = "none";
+      }
+    }
+</script>
+
+
+{% endblock %}
